@@ -56,31 +56,6 @@ def drive_odom(motor1, motor2):
     BP.set_motor_power(BP.PORT_C, 1.5*(motor1-1))
     BP.set_motor_power(BP.PORT_B, 1.5*motor2)
 
-def test():
-    try:
-        try:
-            BP.offset_motor_encoder(BP.PORT_B, BP.get_motor_encoder(BP.PORT_B)) # reset encoder B
-        except IOError as error:
-            print(error)
-    
-        while True:
-            # The following BP.get_motor_encoder function returns the encoder value (what we want to use to control motor C's power).
-            try:
-                power = BP.get_motor_encoder(BP.PORT_B) / 10
-                if power > 100:
-                    power = 100
-                elif power < -100:
-                    power = -100
-            except IOError as error:
-                print(error)
-                power = 0
-            BP.set_motor_power(BP.PORT_C, power)
-        
-            time.sleep(0.02)  # delay for 0.02 seconds (20ms) to reduce the Raspberry Pi CPU load.
-
-    except KeyboardInterrupt: # except the program gets interrupted by Ctrl+C on the keyboard.
-        BP.reset_all()        # Unconfigure the sensors, disable the motors, and restore the LED to the control of the BrickPi3 firmware.
-
 def follow_light():
     BP.set_sensor_type(BP.PORT_1, BP.SENSOR_TYPE.NXT_LIGHT_ON)
     reset_encoders()
